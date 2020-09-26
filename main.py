@@ -39,7 +39,8 @@ def submit_short_url():
 
     # Check for valid domain
     domain_match = re.search(
-        "^([\w\-]+\.)+[\w\-]+", domain_and_path, flags=re.IGNORECASE)
+        "^([\w\-]+\.)+[\w\-]+", domain_and_path, flags=re.IGNORECASE
+    )
     if domain_match is None:
         return jsonify(error="invalid URL", code=400)
     domain = domain_match.group(0)
@@ -49,7 +50,7 @@ def submit_short_url():
     try:
         db = get_db()
         c = db.cursor()
-        c.execute("INSERT INTO ShortUrl(url) VALUES(?)", (url, ))
+        c.execute("INSERT INTO ShortUrl(url) VALUES(?)", (url,))
         index = c.lastrowid
         db.commit()
         return jsonify(original_url=url, short_url=index)
@@ -62,7 +63,7 @@ def redirect_short_url(index):
     try:
         db = get_db()
         c = db.cursor()
-        c.execute("SELECT url FROM ShortUrl WHERE rowid == ?", (int(index), ))
+        c.execute("SELECT url FROM ShortUrl WHERE rowid == ?", (int(index),))
         result = c.fetchone()
         if result is None:
             return jsonify(error="no such short URL", code=404)
