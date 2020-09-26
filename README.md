@@ -1,4 +1,4 @@
-This is a Python port of my [Node.js URL shortener microservice](https://ty-file-metadata.glitch.me/), built with [Flask](https://flask.palletsprojects.com/en/1.1.x/) and [SQLite](https://sqlite.org/index.html). The above front end API test also uses [Bootstrap](https://getbootstrap.com/), [jQuery](https://jquery.com/), and [highlight.js](https://highlightjs.org/). The API fulfills the following user stories:
+This is a Python port of my [Node.js URL shortener microservice](https://ty-urlshortener.glitch.me/), built with [Flask](https://flask.palletsprojects.com/en/1.1.x/) and [SQLite](https://sqlite.org/index.html). The above front end API test also uses [Bootstrap](https://getbootstrap.com/), [jQuery](https://jquery.com/), and [highlight.js](https://highlightjs.org/). The API fulfills the following user stories:
 
 1. I can POST a URL to `[project_url]/api/shorturl/new` and I will receive a shortened URL in the JSON response.
    - Example: `{"original_url": "www.google.com", "short_url": 1}`
