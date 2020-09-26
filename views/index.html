@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- prettier-ignore -->
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="shortcut icon" href="https://tymick.me/favicon.ico" type="image/x-icon" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/default.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+
+    <title>Python URL shortener microservice – Ty Mick</title>
+  </head>
+
+  <body style="background-color: #dee2e6">
+    <div class="container-sm my-5">
+      <h1 class="mb-4">Python URL shortener microservice</h1>
+
+      <!-- API test front end -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="mb-3">Test this API:</h5>
+
+          <form
+            action="api/shorturl/new"
+            method="POST"
+            id="postTest"
+            class="mb-4"
+          >
+            <div class="form-group">
+              <label for="postInput"
+                >Shorten a URL
+                <span class="text-muted"
+                  >(via
+                  https://url-shortener-python.tymick.me/api/shorturl/new)</span
+                ></label
+              >
+              <input
+                type="text"
+                id="postInput"
+                name="url"
+                class="form-control"
+                aria-describedby="postHelp"
+              />
+              <small id="postHelp" class="form-text text-muted"
+                >URL must have a valid domain and follow the
+                <samp> http(s)://www.example.com(/more/routes)</samp> format to
+                get a meaningful response.</small
+              >
+            </div>
+
+            <button type="submit" class="btn btn-primary">POST</button>
+          </form>
+
+          <form id="getTest" class="mb-4">
+            <div class="form-group">
+              <label for="getInput">Access a shortened URL</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">/api/shorturl/</div>
+                </div>
+                <input
+                  type="text"
+                  id="getInput"
+                  class="form-control"
+                  style="max-width: 7em"
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">GET</button>
+          </form>
+
+          <h5>API response:</h5>
+
+          <div class="card">
+            <pre id="apiOutput" class="hljs bg-white mb-0">&#8203;</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <p class="lead font-italic">
+        View the source on
+        <a href="https://github.com/tywmick/url-shortener-python">GitHub</a>
+        or <a href="https://repl.it/@tywmick/url-shortener-python">Repl.it</a>.
+      </p>
+
+      <p>
+        This is a Python port of my
+        <a href="https://ty-file-metadata.glitch.me"
+          >Node.js URL shortener microservice project</a
+        >, built with
+        <a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a> and
+        <a href="https://sqlite.org/index.html">SQLite</a>. The above front end
+        API test also uses <a href="https://getbootstrap.com/">Bootstrap</a>,
+        <a href="https://jquery.com/">jQuery</a>, and
+        <a href="https://highlightjs.org/">highlight.js</a>. The API fulfills
+        the following user stories:
+      </p>
+
+      <ol>
+        <li>
+          I can POST a URL to <code>[project_url]/api/shorturl/new</code> and I
+          will receive a shortened URL in the JSON response.
+          <ul>
+            <li>
+              Example:
+              <code>{"original_url": "www.google.com", "short_url": 1}</code>
+            </li>
+          </ul>
+        </li>
+        <li>
+          If I pass an invalid URL that doesn't follow the
+          <code>http(s)://www.example.com(/more/routes)</code> format, the JSON
+          response will contain an error like
+          <code>{"error": "invalid URL"}</code>.
+          <ul>
+            <li>
+              HINT: to be sure that the submitted url points to a valid site you
+              can use the function <code>dns.lookup(host, cb)</code> from the
+              <code>dns</code> core module.
+            </li>
+          </ul>
+        </li>
+        <li>
+          When I visit the shortened URL, it will redirect me to my original
+          link.
+        </li>
+      </ol>
+
+      <!-- API test scripts -->
+      <script>
+        $(function () {
+          $("#postTest").submit(function () {
+            event.preventDefault();
+            $("button").attr("disabled", true);
+            $("button", this).html(
+              '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Uploading...</span>'
+            );
+            $.ajax({
+              url: "/api/shorturl/new",
+              type: "post",
+              data: { url: $("#postInput").val() },
+              success: function (result) {
+                $("#apiOutput").text(JSON.stringify(result, null, 2));
+                hljs.highlightBlock(document.getElementById("apiOutput"));
+                $("#postTest button").html("POST");
+                $("button").removeAttr("disabled");
+              },
+            });
+          });
+
+          $("#getTest").submit(function () {
+            event.preventDefault();
+            $("button").attr("disabled", true);
+            $("button", this).html(
+              '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Uploading...</span>'
+            );
+            $.ajax({
+              url: "/api/shorturl/" + $("#getInput").val(),
+              type: "get",
+              dataType: "json",
+              success: function (result) {
+                $("#apiOutput").text(JSON.stringify(result, null, 2));
+                hljs.highlightBlock(document.getElementById("apiOutput"));
+                $("#getTest button").html("GET");
+                $("button").removeAttr("disabled");
+              },
+              error: function () {
+                window.location.href = "/api/shorturl/" + $("#getInput").val();
+              },
+            });
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>
