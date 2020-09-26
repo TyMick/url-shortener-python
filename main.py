@@ -15,6 +15,7 @@ def get_db():
     return db
 
 
+# Initialize database
 with app.app_context():
     db = get_db()
     db.cursor().execute("CREATE TABLE IF NOT EXISTS ShortUrl (url TEXT)")
